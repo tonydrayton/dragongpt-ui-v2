@@ -10,6 +10,9 @@ const config: Config = {
 	],
 	theme: {
 		extend: {
+			transitionProperty: {
+				'width': 'width'
+			},
 			boxShadow: {
 				spread: '0px 17px 40px 4px #7090B01C',
 			},
@@ -74,9 +77,9 @@ const config: Config = {
 		require("tailwindcss-animate"),
 		themeVariants({
 			themes: {
-			  light: {
-				mediaQuery: prefersLight /* "@media (prefers-color-scheme: light)" */,
-			  },
+				light: {
+					mediaQuery: prefersLight /* "@media (prefers-color-scheme: light)" */,
+				},
 			}
 		})
 	],

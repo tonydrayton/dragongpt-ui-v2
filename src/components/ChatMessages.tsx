@@ -2,6 +2,7 @@ import Image from "next/image";
 import { useEffect, useRef } from "react";
 import MarioAvatar from "../public/mario.png";
 import { marked } from "marked";
+import DOMPurify from "dompurify";
 
 const renderer = new marked.Renderer();
 marked.setOptions({
@@ -48,7 +49,7 @@ export default function ChatMessages({
 								className="w-10 h-10 aspect-square rounded-full mr-4 object-cover flex-shrink-0 align-top"
 							/>
 						)}
-						<span dangerouslySetInnerHTML={{ __html: marked.parse(message.text) }} />
+						<span>{message.text}</span>
 						{/* Only show the loading animation if the message is being streamed */}
 						{isStreaming && index === messages.length - 1 && (
 							<span className="animate-pulse">...</span>

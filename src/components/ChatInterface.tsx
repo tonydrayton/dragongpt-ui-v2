@@ -3,14 +3,15 @@
 import { useEffect, useRef, useState } from "react";
 import ChatMessages from "./ChatMessages";
 import ChatInput from "./ChatInput";
+import DOMPurify from 'dompurify';
 
 export default function ChatInterface() {
 	const [messages, setMessages] = useState<{ text: string, isUser: boolean}[]>([]);
 	const [isStreaming, setIsStreaming] = useState(false);
-	const inputRef = useRef<HTMLInputElement>(null);
+	const messageRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
-		inputRef.current?.focus();
+		messageRef.current?.focus();
 	}, []);
 
 	const handleSendMessage = async (message: string) => {
@@ -57,7 +58,7 @@ export default function ChatInterface() {
 
 			setMessages(prev => {
 				const newMessages = [...prev];
-				newMessages[newMessages.length - 1].text = "I'm sorry, I couldn't process your request at this moment. Please contact the developers with this error message: " + error.message + " for question " + message;
+				newMessages[newMessages.length - 1].text = `I'm sorry, I couldn't process your request at this moment.\nPlease contact the developers with this error message: ${error.message} for question "${message}" `;
 				return newMessages;
 			});
 		} finally {
@@ -70,7 +71,7 @@ export default function ChatInterface() {
 			<div className="flex-grow overflow-auto">
 				<ChatMessages messages={messages} isStreaming={isStreaming} />
 			</div>
-			<ChatInput onSendMessage={handleSendMessage} inputRef={inputRef} />
+			<ChatInput onSendMessage={handleSendMessage} messageRef={messageRef} />
 		</div>
 	);
 }

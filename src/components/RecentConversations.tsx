@@ -21,12 +21,12 @@ const RecentConversations = ({
 			{conversations.map(convo => (
 				<Button
 					key={convo.id}
-					className={`min-w-32 flex flex-shrink-0 items-center text-left ${convo.id === activeConversation.id ? 'bg-gray-200/60' : ''} hover:bg-gray-300/40 my-2`}
+					className={`min-w-32 flex flex-shrink-0 items-center text-left ${convo.id === activeConversation.id ? 'dark:bg-gray-200/20 bg-gray-200/60' : ''} hover:bg-gray-300/40 my-2`}
 					onClick={() => setActiveConversation(convo)}
 					variant={"ghost"}
 				>
 					<MessageSquareText className="mr-2 w-4"/>
-					<span className="lg:max-w-44 md:max-w-32 truncate">{convo.title}</span>
+					<span className="lg:max-w-44 md:max-w-32 max-w-52 truncate">{convo.title}</span>
 				</Button>
 			))}
 		</div>

@@ -18,6 +18,7 @@ export default function ChatMessages({
 	messages: { text: string, isUser: boolean }[],
 	isStreaming: boolean
 }) {
+	console.log({messages})
 	const messagesEndRef = useRef<HTMLDivElement>(null);
 
 	const scrollToBottom = () => {
@@ -35,10 +36,11 @@ export default function ChatMessages({
 		for (let link of Array.from(links)) {
 			link.setAttribute('target', '_blank');
 		}
+
 	}, [messages]);
 
 	return (
-		<div className="overflow-y-auto h-full mt-auto justify-end flex flex-col margin-top: auto" id="chat-messages"> {/* Add id for links effect */}
+		<div className="overflow-y-auto h-full w-full mt-auto justify-start flex flex-col margin-top: auto" id="chat-messages"> {/* Add id for links effect */}
 			{messages.map((message, index) => (
 				<div key={index} className={`flex ${message.isUser ? 'justify-end' : 'justify-start'} p-2`}>
 					<div className={`flex rounded-lg p-2 ${message.isUser ? 'bg-gray-300/40' : ''}`}>
@@ -49,7 +51,11 @@ export default function ChatMessages({
 								className="w-10 h-10 aspect-square rounded-full mr-4 object-cover flex-shrink-0 align-top"
 							/>
 						)}
-						<span>{message.text}</span>
+						{message.isUser ? (
+							<span>{message.text}</span>
+						) : (
+							<span dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(marked(message.text) as string) }} />
+						)}
 						{/* Only show the loading animation if the message is being streamed */}
 						{isStreaming && index === messages.length - 1 && (
 							<span className="animate-pulse">...</span>

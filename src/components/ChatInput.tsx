@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Input } from "./ui/input"
 import { Button } from "./ui/button";
-import { Mic } from "lucide-react";
+import { Mic, Send } from "lucide-react";
 import { Textarea } from "./ui/textarea";
 
 export default function ChatInput({
@@ -106,10 +106,10 @@ export default function ChatInput({
 			<Button
 				onClick={handleSend}
 				disabled={isSending}
-				className={`rounded-xl`}
+				className={`rounded-xl px-3`}
 				variant="default"
 			>
-				{"Send"}
+				<Send className="md:hidden" /><span className="hidden md:block">Send</span>
 			</Button>
 		</div>
 	)

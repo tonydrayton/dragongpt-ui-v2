@@ -1,12 +1,46 @@
-import { notFound } from "next/navigation"; // To handle invalid IDs
+import { notFound } from "next/navigation";
 import RecentConversations from "@/components/RecentConversations";
+import Nav from "@/components/Nav";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Info } from "lucide-react";
+import ChatInterface from "@/components/ChatInterface";
 
-// Mock function to fetch conversations (replace with your API/data fetch)
 const fetchConversations = async () => {
 	return [
-		{ id: 1, title: "Conversation 1", content: "This is the first conversation." },
-		{ id: 2, title: "Conversation 2", content: "This is the second conversation." },
-		{ id: 3, title: "Conversation 3", content: "This is the third conversation." },
+		{ id: 1, title: "Conversation 1", messages: [
+			{
+				text: 'Hi?',
+				isUser: true
+			},
+			{
+				text: 'Hello!',
+				isUser: false
+			},
+			{
+				text: 'How are you?',
+				isUser: true
+			},
+			{
+				text: 'I am doing well, thank you!',
+				isUser: false
+			},
+			{
+				text: 'That is good to hear!',
+				isUser: true
+			},
+			{
+				text: 'Yes, it is!',
+				isUser: false
+			},
+			{
+				text: 'Goodbye!',
+				isUser: true
+			},
+			{
+				text: 'Goodbye!',
+				isUser: false
+			}
+		] }
 	];
 };
 
@@ -36,16 +70,23 @@ export default async function ChatPage({ params }: { params: { id: string }}) {
 	}
 
 	return (
-		<div className="flex h-screen">
-			{/* Sidebar */}
-			<nav className="hidden lg:flex lg:w-1/4 bg-almostWhite shadow-spread m-4 h-[calc(100vh-2rem)] p-4 overflow-y-auto">
-				<RecentConversations conversations={conversations} activeConversation={activeConversation} />
-			</nav>
-
-			{/* Chat Area */}
-			<div className="flex-1 p-6 bg-white m-4 shadow-lg rounded-lg overflow-y-auto">
-				<h2 className="text-2xl font-bold mb-4">{activeConversation.title}</h2>
-				<p>{activeConversation.content}</p>
+		<div className="m-4 flex">
+			<Nav conversations={conversations} activeConversation={activeConversation} />
+			<div className="p-4 xl:px-24 lg:px-18 md:px-14 sm:px-3 w-full">
+				<div className="flex flex-col">
+					<div className="flex flex-row pb-4 md:relative md:left-[-50px] md:top-[20px] justify-center md:justify-normal">
+						<h1 className="text-4xl px-4 font-bold">DragonGPT</h1>
+						<TooltipProvider>
+							<Tooltip>
+								<TooltipTrigger>
+									<Info />
+								</TooltipTrigger>
+								<TooltipContent>TODO: Add tooltip text</TooltipContent>
+							</Tooltip>
+						</TooltipProvider>
+					</div>
+					<ChatInterface previousMessages={activeConversation.messages} />
+				</div>
 			</div>
 		</div>
 	);

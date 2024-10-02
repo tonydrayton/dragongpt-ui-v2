@@ -4,17 +4,35 @@ import { useEffect, useRef, useState } from "react";
 import ChatMessages from "./ChatMessages";
 import ChatInput from "./ChatInput";
 import DOMPurify from 'dompurify';
+import { randomUUID } from "crypto";
+import { useRouter, useSearchParams } from "next/navigation";
+import { v4 } from "uuid";
 
-export default function ChatInterface() {
-	const [messages, setMessages] = useState<{ text: string, isUser: boolean}[]>([]);
+export default function ChatInterface({
+	previousMessages
+}: {
+	previousMessages?: { text: string, isUser: boolean }[]
+}) {
+	const [messages, setMessages] = useState<{ text: string, isUser: boolean }[]>(previousMessages || []);
 	const [isStreaming, setIsStreaming] = useState(false);
 	const messageRef = useRef<HTMLDivElement>(null);
+
+	const router = useRouter();
+	const searchParams = useSearchParams();
 
 	useEffect(() => {
 		messageRef.current?.focus();
 	}, []);
 
 	const handleSendMessage = async (message: string) => {
+		if (messages.length === 0) {
+			const uuid = v4();
+			// TODO: Use api to create chat
+				// const params = new URLSearchParams(searchParams.toString())
+				// params.set('sort', 'chat')
+				window.history.pushState(null, '', `/chat/${uuid}`)
+		}
+
 		setMessages(prev => [...prev, { text: message, isUser: true }]);
 		setMessages(prev => [...prev, { text: '', isUser: false }]);
 
@@ -68,7 +86,7 @@ export default function ChatInterface() {
 
 	return (
 		<div className="flex flex-col h-[calc(100vh-10rem)] w-full items-center">
-			<div className="flex-grow overflow-auto">
+			<div className="xl:px-32 flex-grow overflow-auto w-full">
 				<ChatMessages messages={messages} isStreaming={isStreaming} />
 			</div>
 			<ChatInput onSendMessage={handleSendMessage} messageRef={messageRef} />

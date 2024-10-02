@@ -87,7 +87,7 @@ body {
 
 /* Scrollbar styles */
 ::-webkit-scrollbar {
-	width: 8px;
+	width: 5px;
 	/* Set the width of the scrollbar */
 }
 
@@ -97,7 +97,7 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-	background: #888;
+	background: #8888884f;
 	border-radius: 4px;
 }
 

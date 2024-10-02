@@ -9,7 +9,7 @@ const RecentConversations = ({
 	activeConversation,
 }: {
 	conversations: Conversation[],
-	activeConversation: Conversation,
+	activeConversation?: Conversation,
 }) => {
 	const router = useRouter();
 
@@ -21,7 +21,7 @@ const RecentConversations = ({
 			{conversations.map(convo => (
 				<Button
 					key={convo.id}
-					className={`min-w-32 flex flex-shrink-0 items-center text-left ${convo.id === activeConversation.id ? 'dark:bg-gray-200/20 bg-gray-200/60' : ''} hover:bg-gray-300/40 my-2`}
+					className={`min-w-32 flex flex-shrink-0 items-center text-left ${convo.id === activeConversation?.id ? 'dark:bg-gray-200/20 bg-gray-200/60' : ''} hover:bg-gray-300/40 my-2`}
 					onClick={() => setActiveConversation(convo)}
 					variant={"ghost"}
 				>

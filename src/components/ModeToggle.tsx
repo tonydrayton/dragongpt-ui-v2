@@ -11,17 +11,30 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Moon, Sun } from "lucide-react"
+import { cn } from "@/lib/utils"
 
-export function ModeToggle() {
+export function ModeToggle({
+	iconOnly,
+	className
+}: {
+	iconOnly?: boolean,
+	className?: string
+}) {
 	const { setTheme } = useTheme()
 
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
-				<Button className="hover:bg-gray-300/40" variant="ghost" size="icon">
-					<Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-					<Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-					<span className="sr-only">Toggle theme</span>
+				<Button className={`${className ? cn(className, 'hover:bg-gray-300/40') : 'hover:bg-gray-300/40'}`} variant="ghost">
+					<Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0 dark:hidden mr-2" />
+					<Moon className=" h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100 hidden dark:block mr-2" />
+					{!iconOnly && (
+						<>
+							<span className="sr-only">Toggle theme</span>
+							<span className="dark:hidden">Light Mode</span>
+						</>
+					)}
+					<span className="hidden dark:block">Dark Mode</span>
 				</Button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align="end">

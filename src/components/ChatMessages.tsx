@@ -18,7 +18,6 @@ export default function ChatMessages({
 	messages: { text: string, isUser: boolean }[],
 	isStreaming: boolean
 }) {
-	console.log({messages})
 	const messagesEndRef = useRef<HTMLDivElement>(null);
 
 	const scrollToBottom = () => {

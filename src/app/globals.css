@@ -88,6 +88,8 @@ body {
 /* Scrollbar styles */
 ::-webkit-scrollbar {
 	width: 5px;
+	transition-property: all;
+	transition-duration: 150ms;
 	/* Set the width of the scrollbar */
 }
 

@@ -17,7 +17,8 @@ const config: Config = {
 				spread: '0px 17px 40px 4px #7090B01C',
 			},
 			backgroundColor: {
-				almostWhite: '#7090B01C',
+				almostWhite: '#F7F7F7',
+				// almostWhite: '#7090B01C',
 				'background-95': 'hsl(var(--background) / 0.95)',
 				'background-70': 'hsl(var(--background) / 0.7)',
 			},

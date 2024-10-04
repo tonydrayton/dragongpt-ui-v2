@@ -30,11 +30,11 @@ export function ModeToggle({
 					<Moon className=" h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100 hidden dark:block mr-2" />
 					{!iconOnly && (
 						<>
-							<span className="sr-only">Toggle theme</span>
 							<span className="dark:hidden">Light Mode</span>
+							<span className="hidden dark:block">Dark Mode</span>
 						</>
 					)}
-					<span className="hidden dark:block">Dark Mode</span>
+					<span className="sr-only">Toggle theme</span>
 				</Button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align="end">

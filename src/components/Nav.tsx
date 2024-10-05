@@ -12,11 +12,7 @@ import Link from "next/link";
 import ClearAllChatsButton from "./ClearAllChatsButton";
 
 export default function Nav({
-	conversations,
-	activeConversation,
 }: {
-	conversations: Conversation[],
-	activeConversation?: Conversation,
 }) {
 	const [open, setOpen] = useState(true);
 
@@ -41,9 +37,6 @@ export default function Nav({
 					<div>
 						<h2 className="scroll-m-20 pb-2 text-2xl font-bold tracking-wide first:mt-0">Recent</h2>
 						<RecentConversations
-							conversations={conversations}
-							activeConversation={activeConversation}
-
 						/>
 					</div>
 					<Separator className="my-6" />
@@ -71,8 +64,6 @@ export default function Nav({
 					<div className="min-h-96">
 						{/* <h2 className="scroll-m-20 pb-2 text-2xl font-bold tracking-wide first:mt-0">Recent</h2> */}
 						<RecentConversations
-							conversations={conversations}
-							activeConversation={activeConversation}
 							small
 						/>
 					</div>
@@ -103,10 +94,7 @@ export default function Nav({
 							<Separator className="my-6" />
 							<div>
 								<h2 className="scroll-m-20 pb-2 text-2xl font-semibold first:mt-0">Recent</h2>
-								<RecentConversations
-									conversations={conversations}
-									activeConversation={activeConversation}
-								/>
+								<RecentConversations />
 							</div>
 							<Separator className="my-6" />
 							<div className="flex flex-col items-start gap-4">

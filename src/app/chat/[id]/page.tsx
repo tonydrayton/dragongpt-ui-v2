@@ -9,6 +9,7 @@ import ChatInterface from "@/components/ChatInterface";
 import { Suspense, useEffect, useState } from "react";
 import { Toaster, toast } from "sonner";
 import { Spinner } from "@/components/ui/spinner";
+import { useConversationStore } from "@/stores/useConversationStore";
 
 // export async function generateMetadata({ params }: { params: { id: string }}) {
 // 	const conversations = await fetchConversations();
@@ -27,8 +28,7 @@ import { Spinner } from "@/components/ui/spinner";
 // }
 
 export default function ChatPage({ params }: { params: { id: string } }) {
-	const [conversations, setConversations] = useState<Conversation[]>([]);
-	const [activeConversation, setActiveConversation] = useState<Conversation | undefined>();
+	const { conversations, setConversations, activeConversation, setActiveConversation } = useConversationStore();
 	const router = useRouter();
 
 	useEffect(() => {
@@ -43,16 +43,17 @@ export default function ChatPage({ params }: { params: { id: string } }) {
 			const activeConversation = convos.find(
 				(convo) => convo.id === params.id
 			);
-			setActiveConversation(activeConversation);
 			if(!activeConversation) {
 				router.push('/'); // if the conversation is not found, redirect to the home page
+			} else {
+				setActiveConversation(activeConversation);
 			}
 		}
 	}, []);
 
 	return (
 		<div className="m-4 flex">
-			<Nav conversations={conversations} activeConversation={activeConversation} />
+			<Nav />
 			<div className="p-4 xl:px-24 lg:px-18 md:px-14 sm:px-3 w-full">
 				<div className="flex flex-col">
 					<div className="flex flex-row pb-4 md:relative md:left-[-50px] md:top-[20px] justify-center md:justify-normal">
@@ -66,7 +67,7 @@ export default function ChatPage({ params }: { params: { id: string } }) {
 							</Tooltip>
 						</TooltipProvider>
 					</div>
-					<ChatInterface activeConversation={activeConversation} />
+					<ChatInterface />
 				</div>
 			</div>
 		</div>

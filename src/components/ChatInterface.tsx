@@ -7,33 +7,15 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { v4 } from "uuid";
 import { Button } from "./ui/button";
 import { Spinner } from "./ui/spinner";
-
-const samples = {
-	questions: [
-		'What are the top engineering programs at Drexel?',
-		'What are the on campus housing options at Drexel?',
-		'What resources are available for freshman academic support at Drexel?',
-	],
-	capabilities: [
-		'Reference general sources or explain where you might find further reading.',
-		'Answer questions on a wide range of topics, from academics to general knowledge.',
-		'Assist with research, offering insight across various fields.',
-	],
-	limitations: [
-		'May occasionally get incorrect information.',
-		'May occasionally produce harmful instructions or biased content.',
-		'Limited knowledge, Drexel community based.'
-	]
-};
+import { useConversationStore } from "@/stores/useConversationStore";
+import { samples } from "@/lib/utils";
 
 export default function ChatInterface({
-	activeConversation
+
 }: {
-	activeConversation?: Conversation
 }) {
-	const [activeConvo, setActiveConvo] = useState(activeConversation);
-	const [messages, setMessages] = useState<{ text: string, isUser: boolean }[] | null>(null);
-	const [isStreaming, setIsStreaming] = useState(false);
+	const { conversations, activeConversation, isStreaming, setConversations, setActiveConversation, addMessageToConversation, setIsStreaming, addMessage, updateLastMessage } = useConversationStore();
+	const [messages, setMessages] = useState<Message[] | null>(null);
 	const messageRef = useRef<HTMLDivElement>(null);
 	const pathname = usePathname();
 
@@ -45,38 +27,53 @@ export default function ChatInterface({
 	// reset messages when navigating to home
 	useEffect(() => {
 		if (pathname === '/' && messages && messages.length > 0) {
-			setActiveConvo(undefined);
 			setMessages([]);
 		}
 	}, [pathname]);
 
 	useEffect(() => {
 		setMessages(activeConversation?.messages || []);
-		setActiveConvo(activeConversation);
 	}, [activeConversation]);
 
 	const handleSendMessage = async (message: string) => {
-		let convo = activeConvo;
-		const pastConversations = JSON.parse(window.localStorage.getItem('conversations') || '[]') as Conversation[];
-		console.log({ pastConversations });
+		const newMessage = { text: message, isUser: true, timestamp: Date.now() };
+		let convo = activeConversation;
+		const pastConversations = [...conversations];
 
 		if (!convo) {
 			const uuid = v4();
 			convo = { id: uuid, title: `Conversation ${pastConversations.length + 1}`, messages: [] };
 			convo.messages.push({ text: message, isUser: true, timestamp: Date.now() });
-			setActiveConvo(convo);
+			setActiveConversation(convo);
+			console.log({newMessage})
+			setConversations([...pastConversations, convo]);
 			window.localStorage.setItem('conversations', JSON.stringify([...pastConversations, convo]));
 			window.history.pushState(null, '', `/chat/${uuid}`);
 		} else {
-			convo.messages = [...convo.messages, { text: message, isUser: true, timestamp: Date.now() }];
+			console.log('\n\n\n\n\nexists\n\n\n')
+			convo.messages.push(newMessage);
+			// convo.messages = [...convo.messages, { text: message, isUser: true, timestamp: Date.now() }];
 			const updatedConversations = pastConversations.map(c =>
 				c.id === convo!.id ? convo : c
 			);
+			setConversations(updatedConversations.filter((c): c is Conversation => c !== undefined));
+			console.log({convoMsgs: convo.messages})
+			console.log({ before: messages })
+			setMessages(convo.messages);
+			console.log({ after: messages })
 			window.localStorage.setItem('conversations', JSON.stringify(updatedConversations));
 		}
-		
-		setMessages(prev => [...prev!, { text: message, isUser: true }]);
-		setMessages(prev => [...prev!, { text: '', isUser: false }]);
+
+		// setMessages(convo.messages);
+		addMessageToConversation(convo.id, newMessage);
+		console.log({messages})
+
+
+		setIsStreaming(true);
+		setMessages(prev => [...(prev || []), { text: '', isUser: false, timestamp: Date.now() }]);
+		addMessage({ text: '', isUser: false, timestamp: Date.now() })
+		console.log({messages})
+
 
 		try {
 			const response = await fetch(process.env.NEXT_PUBLIC_API_URL + '/query', {
@@ -103,44 +100,41 @@ export default function ChatInterface({
 				accumulatedChunks += chunk;
 
 				const updateMessages = (chunks: string) => {
-					setMessages(prev => {
-						const newMessages = [...prev!];
-						const lastMessage = newMessages[newMessages.length - 1];
-						lastMessage.text = chunks;
-						return newMessages;
-					});
+					updateLastMessage(chunks);
 				};
 
 				updateMessages(accumulatedChunks);
 			}
 
 			convo.messages.push({ text: accumulatedChunks, isUser: false, timestamp: Date.now() });
+			setMessages(convo.messages);
+			addMessageToConversation(convo.id, { text: accumulatedChunks, isUser: false, timestamp: Date.now() });
+
 			const conversationExists = pastConversations.some(c => c.id === convo.id);
 			const updatedConversations = conversationExists
 				? pastConversations.map(c => (c.id === convo.id ? convo : c))  // Update existing
 				: [...pastConversations, convo]; // Append new conversation if it doesn't exist
-
-			window.localStorage.setItem('conversations', JSON.stringify(updatedConversations));
+			setConversations(updatedConversations);
+			window.localStorage.setItem('conversations', JSON.stringify(conversations));
 		} catch (error: any) {
 			console.error('Error fetching bot response:', error.message);
 			const errorText = `I'm sorry, I couldn't process your request at this moment.\nPlease contact the developers with this error message: ${error.message} for question "${message}" `;
 
 			convo.messages.push({ text: errorText, isUser: false, timestamp: Date.now() });
+			setMessages(convo.messages);
+			console.log({messages})
+			console.log(errorText)
+			addMessageToConversation(convo.id, { text: errorText, isUser: false, timestamp: Date.now() });
+
 			const conversationExists = pastConversations.some(c => c.id === convo.id);
 			const updatedConversations = conversationExists
 				? pastConversations.map(c => (c.id === convo.id ? convo : c))  // Update existing
 				: [...pastConversations, convo]; // Append new conversation if it doesn't exist
-
+			setConversations(updatedConversations);
 			window.localStorage.setItem('conversations', JSON.stringify(updatedConversations));
-
-			setMessages(prev => {
-				const newMessages = [...prev!];
-				newMessages[newMessages.length - 1].text = errorText;
-				return newMessages;
-			});
 		} finally {
 			setIsStreaming(false);
-
+			console.log({messages})
 		}
 	};
 

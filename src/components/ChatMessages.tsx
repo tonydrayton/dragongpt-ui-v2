@@ -3,6 +3,7 @@ import { useEffect, useRef } from "react";
 import MarioAvatar from "../public/mario.png";
 import { marked } from "marked";
 import DOMPurify from "dompurify";
+import { useConversationStore } from "@/stores/useConversationStore";
 
 const renderer = new marked.Renderer();
 marked.setOptions({
@@ -15,7 +16,7 @@ export default function ChatMessages({
 	messages,
 	isStreaming
 }: {
-	messages: { text: string, isUser: boolean }[],
+	messages: Message[],
 	isStreaming: boolean
 }) {
 	const messagesEndRef = useRef<HTMLDivElement>(null);

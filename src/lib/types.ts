@@ -10,3 +10,18 @@ type Message = {
 	isUser: boolean;
 	timestamp: number;
 }
+
+interface ConversationState {
+	conversations: Conversation[];
+	activeConversation?: Conversation;
+	isStreaming: boolean;
+	messages: Message[] | null;
+	setConversations: (conversations: Conversation[]) => void;
+	setActiveConversation: (conversation: Conversation) => void;
+	addMessageToConversation: (conversationId: string, message: Message) => void;
+	setIsStreaming: (streaming: boolean) => void;
+	setMessages: (messages: Message[]) => void;
+	addMessage: (message: Message) => void;
+	updateLastMessage: (text: string) => void;
+  }
+

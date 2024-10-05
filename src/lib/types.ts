@@ -8,4 +8,5 @@ type Conversation = {
 type Message = {
 	text: string;
 	isUser: boolean;
+	timestamp: number;
 }

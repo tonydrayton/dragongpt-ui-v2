@@ -45,6 +45,7 @@ export default function ChatInterface({
 	// reset messages when navigating to home
 	useEffect(() => {
 		if (pathname === '/' && messages && messages.length > 0) {
+			setActiveConvo(undefined);
 			setMessages([]);
 		}
 	}, [pathname]);
@@ -55,35 +56,29 @@ export default function ChatInterface({
 	}, [activeConversation]);
 
 	const handleSendMessage = async (message: string) => {
-		console.log({activeConvo})
 		let convo = activeConvo;
 		const pastConversations = JSON.parse(window.localStorage.getItem('conversations') || '[]') as Conversation[];
+		console.log({ pastConversations });
 
 		if (!convo) {
 			const uuid = v4();
 			convo = { id: uuid, title: `Conversation ${pastConversations.length + 1}`, messages: [] };
-			convo.messages.push({ text: message, isUser: true });
-			console.log('storing...')
+			convo.messages.push({ text: message, isUser: true, timestamp: Date.now() });
 			setActiveConvo(convo);
 			window.localStorage.setItem('conversations', JSON.stringify([...pastConversations, convo]));
 			window.history.pushState(null, '', `/chat/${uuid}`);
 		} else {
-			convo.messages = [...convo.messages, { text: message, isUser: true }];
+			convo.messages = [...convo.messages, { text: message, isUser: true, timestamp: Date.now() }];
 			const updatedConversations = pastConversations.map(c =>
 				c.id === convo!.id ? convo : c
 			);
 			window.localStorage.setItem('conversations', JSON.stringify(updatedConversations));
 		}
-		console.log(window.localStorage.getItem('conversations'))
-
-		console.log({convo})
-
+		
 		setMessages(prev => [...prev!, { text: message, isUser: true }]);
 		setMessages(prev => [...prev!, { text: '', isUser: false }]);
 
 		try {
-			console.log(window.localStorage.getItem('conversations'))
-
 			const response = await fetch(process.env.NEXT_PUBLIC_API_URL + '/query', {
 				method: 'POST',
 				headers: {
@@ -119,19 +114,22 @@ export default function ChatInterface({
 				updateMessages(accumulatedChunks);
 			}
 
-			convo.messages.push({ text: accumulatedChunks, isUser: false });
-			const updatedConversations = pastConversations.length > 0 ? pastConversations.map(c => c.id === convo.id ? convo : c) : [convo];
+			convo.messages.push({ text: accumulatedChunks, isUser: false, timestamp: Date.now() });
+			const conversationExists = pastConversations.some(c => c.id === convo.id);
+			const updatedConversations = conversationExists
+				? pastConversations.map(c => (c.id === convo.id ? convo : c))  // Update existing
+				: [...pastConversations, convo]; // Append new conversation if it doesn't exist
+
 			window.localStorage.setItem('conversations', JSON.stringify(updatedConversations));
 		} catch (error: any) {
-			console.log(window.localStorage.getItem('conversations'))
-
 			console.error('Error fetching bot response:', error.message);
 			const errorText = `I'm sorry, I couldn't process your request at this moment.\nPlease contact the developers with this error message: ${error.message} for question "${message}" `;
 
-			convo.messages.push({ text: errorText, isUser: false });
-			const updatedConversations = pastConversations.length > 0 ? pastConversations.map(c => c.id === convo.id ? convo : c) : [convo];
-			console.log({updatedConversations})
-			console.log(window.localStorage.getItem('conversations'))
+			convo.messages.push({ text: errorText, isUser: false, timestamp: Date.now() });
+			const conversationExists = pastConversations.some(c => c.id === convo.id);
+			const updatedConversations = conversationExists
+				? pastConversations.map(c => (c.id === convo.id ? convo : c))  // Update existing
+				: [...pastConversations, convo]; // Append new conversation if it doesn't exist
 
 			window.localStorage.setItem('conversations', JSON.stringify(updatedConversations));
 
@@ -140,10 +138,8 @@ export default function ChatInterface({
 				newMessages[newMessages.length - 1].text = errorText;
 				return newMessages;
 			});
-
 		} finally {
 			setIsStreaming(false);
-			console.log(window.localStorage.getItem('conversations'))
 
 		}
 	};

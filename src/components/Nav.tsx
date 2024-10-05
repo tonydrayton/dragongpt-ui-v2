@@ -51,7 +51,7 @@ export default function Nav({
 						<ClearAllChatsButton />
 						<Button variant={"ghost"} className="hover:bg-gray-300/40 py-4" asChild>
 							<Link href="/faq" className={buttonVariants({ variant: "ghost" })}>
-								<SquareArrowOutUpRight className="h-[1.2rem] w-[1.2rem] mr-2" />Updates & FAQ
+								<SquareArrowOutUpRight className="h-[1.2rem] w-[1.2rem] mr-2" />Learn more
 							</Link>
 						</Button>
 						<ModeToggle />
@@ -70,11 +70,11 @@ export default function Nav({
 
 					<div className="min-h-96">
 						{/* <h2 className="scroll-m-20 pb-2 text-2xl font-bold tracking-wide first:mt-0">Recent</h2> */}
-					<RecentConversations
-						conversations={conversations}
-						activeConversation={activeConversation}
-						small
-					/>
+						<RecentConversations
+							conversations={conversations}
+							activeConversation={activeConversation}
+							small
+						/>
 					</div>
 					<Separator className="my-6" />
 					<div className="flex flex-col items-start gap-2">
@@ -111,8 +111,10 @@ export default function Nav({
 							<Separator className="my-6" />
 							<div className="flex flex-col items-start gap-4">
 								<ClearAllChatsButton />
-								<Button variant={"ghost"} className="hover:bg-gray-300/40 py-4">
-									<SquareArrowOutUpRight className="mr-2" />Updates & FAQ
+								<Button variant={"ghost"} className="hover:bg-gray-300/40 py-4" asChild>
+									<Link href="/faq" className={buttonVariants({ variant: "ghost" })}>
+										<SquareArrowOutUpRight className="h-[1.2rem] w-[1.2rem] mr-2" />Learn more
+									</Link>
 								</Button>
 								<ModeToggle />
 

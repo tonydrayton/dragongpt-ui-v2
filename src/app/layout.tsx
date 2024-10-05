@@ -3,6 +3,9 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { Plus_Jakarta_Sans } from 'next/font/google';
 import { ThemeProvider } from "@/components/theme-provider";
+import { Toaster } from "sonner";
+import { Suspense } from "react";
+import { Spinner } from "@/components/ui/spinner";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
 	subsets: ['latin'],
@@ -40,9 +43,10 @@ export default function RootLayout({
 					defaultTheme="system"
 					enableSystem
 					disableTransitionOnChange
-				>	
+				>
 					{children}
 				</ThemeProvider>
+				<Toaster />
 			</body>
 		</html>
 	);

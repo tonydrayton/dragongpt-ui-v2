@@ -1,5 +1,5 @@
 type Conversation = {
-	id: number;
+	id: string;
 	title: string;
 	messages: Message[];
 	// This will probably include more fields in the future like the creator (user)

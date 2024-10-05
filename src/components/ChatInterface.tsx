@@ -6,6 +6,7 @@ import ChatInput from "./ChatInput";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { v4 } from "uuid";
 import { Button } from "./ui/button";
+import { Spinner } from "./ui/spinner";
 
 const samples = {
 	questions: [
@@ -26,11 +27,12 @@ const samples = {
 };
 
 export default function ChatInterface({
-	previousMessages
+	activeConversation
 }: {
-	previousMessages?: { text: string, isUser: boolean }[]
+	activeConversation?: Conversation
 }) {
-	const [messages, setMessages] = useState<{ text: string, isUser: boolean }[]>(previousMessages || []);
+	const [activeConvo, setActiveConvo] = useState(activeConversation);
+	const [messages, setMessages] = useState<{ text: string, isUser: boolean }[] | null>(null);
 	const [isStreaming, setIsStreaming] = useState(false);
 	const messageRef = useRef<HTMLDivElement>(null);
 	const pathname = usePathname();
@@ -42,24 +44,46 @@ export default function ChatInterface({
 
 	// reset messages when navigating to home
 	useEffect(() => {
-		if (pathname === '/' && messages.length > 0) {
+		if (pathname === '/' && messages && messages.length > 0) {
 			setMessages([]);
 		}
 	}, [pathname]);
 
-	const handleSendMessage = async (message: string) => {
-		if (messages.length === 0) {
-			const uuid = v4();
-			// TODO: Use api to create chat
-			// const params = new URLSearchParams(searchParams.toString())
-			// params.set('sort', 'chat')
-			window.history.pushState(null, '', `/chat/${uuid}`)
-		}
+	useEffect(() => {
+		setMessages(activeConversation?.messages || []);
+		setActiveConvo(activeConversation);
+	}, [activeConversation]);
 
-		setMessages(prev => [...prev, { text: message, isUser: true }]);
-		setMessages(prev => [...prev, { text: '', isUser: false }]);
+	const handleSendMessage = async (message: string) => {
+		console.log({activeConvo})
+		let convo = activeConvo;
+		const pastConversations = JSON.parse(window.localStorage.getItem('conversations') || '[]') as Conversation[];
+
+		if (!convo) {
+			const uuid = v4();
+			convo = { id: uuid, title: `Conversation ${pastConversations.length + 1}`, messages: [] };
+			convo.messages.push({ text: message, isUser: true });
+			console.log('storing...')
+			setActiveConvo(convo);
+			window.localStorage.setItem('conversations', JSON.stringify([...pastConversations, convo]));
+			window.history.pushState(null, '', `/chat/${uuid}`);
+		} else {
+			convo.messages = [...convo.messages, { text: message, isUser: true }];
+			const updatedConversations = pastConversations.map(c =>
+				c.id === convo!.id ? convo : c
+			);
+			window.localStorage.setItem('conversations', JSON.stringify(updatedConversations));
+		}
+		console.log(window.localStorage.getItem('conversations'))
+
+		console.log({convo})
+
+		setMessages(prev => [...prev!, { text: message, isUser: true }]);
+		setMessages(prev => [...prev!, { text: '', isUser: false }]);
 
 		try {
+			console.log(window.localStorage.getItem('conversations'))
+
 			const response = await fetch(process.env.NEXT_PUBLIC_API_URL + '/query', {
 				method: 'POST',
 				headers: {
@@ -85,7 +109,7 @@ export default function ChatInterface({
 
 				const updateMessages = (chunks: string) => {
 					setMessages(prev => {
-						const newMessages = [...prev];
+						const newMessages = [...prev!];
 						const lastMessage = newMessages[newMessages.length - 1];
 						lastMessage.text = chunks;
 						return newMessages;
@@ -94,26 +118,44 @@ export default function ChatInterface({
 
 				updateMessages(accumulatedChunks);
 			}
+
+			convo.messages.push({ text: accumulatedChunks, isUser: false });
+			const updatedConversations = pastConversations.length > 0 ? pastConversations.map(c => c.id === convo.id ? convo : c) : [convo];
+			window.localStorage.setItem('conversations', JSON.stringify(updatedConversations));
 		} catch (error: any) {
+			console.log(window.localStorage.getItem('conversations'))
+
 			console.error('Error fetching bot response:', error.message);
+			const errorText = `I'm sorry, I couldn't process your request at this moment.\nPlease contact the developers with this error message: ${error.message} for question "${message}" `;
+
+			convo.messages.push({ text: errorText, isUser: false });
+			const updatedConversations = pastConversations.length > 0 ? pastConversations.map(c => c.id === convo.id ? convo : c) : [convo];
+			console.log({updatedConversations})
+			console.log(window.localStorage.getItem('conversations'))
+
+			window.localStorage.setItem('conversations', JSON.stringify(updatedConversations));
 
 			setMessages(prev => {
-				const newMessages = [...prev];
-				newMessages[newMessages.length - 1].text = `I'm sorry, I couldn't process your request at this moment.\nPlease contact the developers with this error message: ${error.message} for question "${message}" `;
+				const newMessages = [...prev!];
+				newMessages[newMessages.length - 1].text = errorText;
 				return newMessages;
 			});
+
 		} finally {
 			setIsStreaming(false);
+			console.log(window.localStorage.getItem('conversations'))
+
 		}
 	};
 
 	return (
 		<div className="flex flex-col h-[calc(100vh-10rem)] w-full items-center">
-			{messages.length > 0 ? (
+			{messages && messages.length > 0 && (
 				<div className="xl:px-32 flex-grow overflow-auto w-full">
 					<ChatMessages messages={messages} isStreaming={isStreaming} />
 				</div>
-			) : (
+			)}
+			{messages && messages.length === 0 && (
 				<div className="flex flex-col items-center justify-center h-full w-full">
 					<h1 className="text-3xl font-bold mb-10">Ask DragonGPT</h1>
 					<div className="flex flex-row items-start gap-10">
@@ -145,6 +187,11 @@ export default function ChatInterface({
 							</div>
 						</div>
 					</div>
+				</div>
+			)}
+			{!messages && (
+				<div className="flex flex-grow justify-center">
+					<Spinner className="" />
 				</div>
 			)}
 			<ChatInput onSendMessage={handleSendMessage} messageRef={messageRef} />

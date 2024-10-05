@@ -1,73 +1,54 @@
-import { notFound } from "next/navigation";
+'use client';
+
+import { notFound, useRouter } from "next/navigation";
 import RecentConversations from "@/components/RecentConversations";
 import Nav from "@/components/Nav";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Info } from "lucide-react";
 import ChatInterface from "@/components/ChatInterface";
+import { Suspense, useEffect, useState } from "react";
+import { Toaster, toast } from "sonner";
+import { Spinner } from "@/components/ui/spinner";
 
-const fetchConversations = async () => {
-	return [
-		{ id: 1, title: "Conversation 1", messages: [
-			{
-				text: 'Hi?',
-				isUser: true
-			},
-			{
-				text: 'Hello!',
-				isUser: false
-			},
-			{
-				text: 'How are you?',
-				isUser: true
-			},
-			{
-				text: 'I am doing well, thank you!',
-				isUser: false
-			},
-			{
-				text: 'That is good to hear!',
-				isUser: true
-			},
-			{
-				text: 'Yes, it is!',
-				isUser: false
-			},
-			{
-				text: 'Goodbye!',
-				isUser: true
-			},
-			{
-				text: 'Goodbye!',
-				isUser: false
+// export async function generateMetadata({ params }: { params: { id: string }}) {
+// 	const conversations = await fetchConversations();
+// 	const activeConversation = conversations.find(
+// 		(convo) => convo.id === params.id
+// 	);
+
+// 	if (!activeConversation) {
+// 		return { title: "Conversation Not Found" };
+// 	}
+
+// 	return {
+// 		title: activeConversation.title,
+// 		description: `Viewing ${activeConversation.title}`,
+// 	};
+// }
+
+export default function ChatPage({ params }: { params: { id: string } }) {
+	const [conversations, setConversations] = useState<Conversation[]>([]);
+	const [activeConversation, setActiveConversation] = useState<Conversation | undefined>();
+	const router = useRouter();
+
+	useEffect(() => {
+		const fetchConversations = () => {
+			return JSON.parse(window.localStorage.getItem('conversations') || '[]') as Conversation[];
+		};
+
+		if (typeof window !== "undefined") {
+			let convos = fetchConversations();
+			setConversations(convos);
+
+			const activeConversation = convos.find(
+				(convo) => convo.id === params.id
+			);
+			setActiveConversation(activeConversation);
+			if(!activeConversation) {
+				router.push('/'); // if the conversation is not found, redirect to the home page
 			}
-		] }
-	];
-};
-
-// This function is called for every page load (SSR)
-export async function generateMetadata({ params }: { params: { id: string }}) {
-	const conversations = await fetchConversations();
-	const activeConversation = conversations.find(
-		(convo) => convo.id === parseInt(params.id)
-	);
-
-	if (!activeConversation) {
-		return { title: "Conversation Not Found" };
-	}
-
-	return {
-		title: activeConversation.title,
-		description: `Viewing ${activeConversation.title}`,
-	};
-}
-
-export default async function ChatPage({ params }: { params: { id: string }}) {
-	const conversations = await fetchConversations();
-	const activeConversation = conversations.find((convo) => convo.id === parseInt(params.id));
-
-	if (!activeConversation) {
-		notFound();
-	}
+		}
+	}, []);
 
 	return (
 		<div className="m-4 flex">
@@ -85,7 +66,7 @@ export default async function ChatPage({ params }: { params: { id: string }}) {
 							</Tooltip>
 						</TooltipProvider>
 					</div>
-					<ChatInterface previousMessages={activeConversation.messages} />
+					<ChatInterface activeConversation={activeConversation} />
 				</div>
 			</div>
 		</div>

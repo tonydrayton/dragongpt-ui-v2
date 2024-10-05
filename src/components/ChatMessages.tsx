@@ -26,16 +26,12 @@ export default function ChatMessages({
 
 	useEffect(() => {
 		scrollToBottom();
-	}, [messages]);
-
-	useEffect(() => {
 		const chatMessages = document.getElementById('chat-messages');
 		if (!chatMessages) return;
 		const links = chatMessages.getElementsByTagName('a');
 		for (let link of Array.from(links)) {
 			link.setAttribute('target', '_blank');
 		}
-
 	}, [messages]);
 
 	return (

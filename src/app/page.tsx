@@ -1,3 +1,5 @@
+'use client';
+
 import ChatInterface from "@/components/ChatInterface";
 import { ModeToggle } from "@/components/ModeToggle";
 import Nav from "@/components/Nav";
@@ -7,48 +9,22 @@ import { Separator } from "@/components/ui/separator";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Info, Plus, Trash2Icon, TrashIcon } from 'lucide-react';
 import { X } from 'lucide-react';
+import { useEffect, useState } from "react";
+import { Toaster } from "sonner";
 
-const fetchConversations = async (): Promise<Conversation[]> => { // mock API call
-	return [
-		{ id: 1, title: "Conversation 1", messages: [
-			{
-				text: 'Hi?',
-				isUser: true
-			},
-			{
-				text: 'Hello!',
-				isUser: false
-			},
-			{
-				text: 'How are you?',
-				isUser: true
-			},
-			{
-				text: 'I am doing well, thank you!',
-				isUser: false
-			},
-			{
-				text: 'That is good to hear!',
-				isUser: true
-			},
-			{
-				text: 'Yes, it is!',
-				isUser: false
-			},
-			{
-				text: 'Goodbye!',
-				isUser: true
-			},
-			{
-				text: 'Goodbye!',
-				isUser: false
-			}
-		] }
-	];
-};
+export default function Home() {
+	const [conversations, setConversations] = useState<Conversation[]>([]);
 
-export default async function Home() {
-	const conversations = await fetchConversations();
+	useEffect(() => {
+		const fetchConversations = () => {
+			return JSON.parse(window.localStorage.getItem('conversations') || '[]') as Conversation[];
+		};
+
+		if (typeof window !== "undefined") {
+			setConversations(fetchConversations());
+		}
+	}, []);
+
 	return (
 		<div className="m-4 flex">
 			<Nav conversations={conversations}/>

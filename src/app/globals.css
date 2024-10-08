@@ -87,7 +87,7 @@ body {
 
 /* Scrollbar styles */
 ::-webkit-scrollbar {
-	width: 5px;
+	width: 8px;
 	transition-property: all;
 	transition-duration: 150ms;
 	/* Set the width of the scrollbar */
@@ -113,4 +113,24 @@ body {
 	user-select: none;
 	display: block;
 	color: gray;
+}
+
+a {
+	color: #0c4381;
+	text-decoration: underline;
+}
+
+#bot-response > h1{
+	font-size: x-large;
+	font-weight: bold;
+}
+
+#bot-response > h2{
+	font-size: larger;
+	font-weight: bold;
+}
+
+#bot-response > h3{
+	font-size: larger;
+	font-weight: bold;
 }

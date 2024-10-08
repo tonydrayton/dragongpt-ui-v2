@@ -21,7 +21,7 @@ const RecentConversations = ({
 		router.push(`/chat/${convo.id}`);
 	};
 	return (
-		<div className={`${small ? 'items-center' : 'items-start'} flex flex-col items-start min-h-96 max-h-96 overflow-auto`}>
+		<div className={`${small ? 'items-center' : 'items-start'} flex flex-col items-start max-h-96`}>
 			{conversations.map(convo => (
 				<Button
 					key={convo.id}

@@ -50,7 +50,6 @@ export default function ChatInput({
 			(window as any).SpeechRecognition ||
 			(window as any).webkitSpeechRecognition;
 		const recognition = new SpeechRecognition();
-		console.log({ recognition });
 		recognition.lang = "en-US";
 		recognition.interimResults = false;
 
@@ -62,7 +61,7 @@ export default function ChatInput({
 			const results = event.results as SpeechRecognitionResultList;
 			const transcript = results[0][0].transcript;
 			setInputValue(transcript);
-			console.log(transcript);
+			if(messageRef.current?.textContent) messageRef.current.textContent = transcript;
 			handleSend();
 		};
 		recognition.onerror = (event: any) => {
@@ -99,11 +98,10 @@ export default function ChatInput({
 					data-placeholder="Message DragonGPT"
 					id="input-yes"
 				>
-					{isRecording ? inputValue : <></>}
 				</div>
 				<Button
 					onClick={handleMicClick}
-					className={`rounded-full ${isRecording ? "bg-red-500 anime-pulse" : ""
+					className={`rounded-full ${isRecording ? "bg-red-500 animate-pulse" : ""
 						}`}
 					variant="ghost"
 				>

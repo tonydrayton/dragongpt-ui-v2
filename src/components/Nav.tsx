@@ -46,7 +46,7 @@ export default function Nav({
 		>
 			{open ? (
 				<div
-					className="hidden md:flex md:flex-col md:gap-2 p-6 h-full justify-between box-border w-[-webkit-fill-available] transition-all ease-in-out duration-200"
+					className="hidden md:flex md:flex-col overflow-x-auto md:gap-2 p-6 h-full justify-between box-border w-[-webkit-fill-available] transition-all ease-in-out duration-200"
 					id="navbar"
 				>
 					<div className="flex justify-center items-center transition-all ease-in-out duration-200">

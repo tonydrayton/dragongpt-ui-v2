@@ -11,18 +11,18 @@ export default function ChatInput({
 	onSendMessage: (message: string) => void;
 	messageRef: React.RefObject<HTMLDivElement>;
 }) {
-	const [inputValue, setInputValue] = useState("");
+	const [inputValue, setInputValue] = useState<{text: string, voice: boolean}>({text: "", voice: false});
 	const [isSending, setIsSending] = useState(false);
 	const [isRecording, setIsRecording] = useState(false);
 
 	const handleSend = () => {
 		console.log("a");
 		console.log({ inputValue });
-		if (inputValue.trim().length > 0) {
+		if (inputValue.text.trim().length > 0) {
 			console.log(inputValue);
 			setIsSending(true);
-			onSendMessage(inputValue);
-			setInputValue("");
+			onSendMessage(inputValue.text);
+			setInputValue({ text: "", voice: false });
 			if (messageRef.current) {
 				messageRef.current.innerText = "";
 			}
@@ -51,7 +51,7 @@ export default function ChatInput({
 			(window as any).webkitSpeechRecognition;
 		const recognition = new SpeechRecognition();
 		recognition.lang = "en-US";
-		recognition.interimResults = false;
+		recognition.interimResults = true;
 
 		recognition.onstart = () => {
 			setIsRecording(true);
@@ -60,18 +60,17 @@ export default function ChatInput({
 		recognition.onresult = (event: any) => {
 			const results = event.results as SpeechRecognitionResultList;
 			const transcript = results[0][0].transcript;
-			setInputValue(transcript);
-			if(messageRef.current?.textContent) messageRef.current.textContent = transcript;
-			handleSend();
+			setInputValue({ text: transcript, voice: true });
 		};
 		recognition.onerror = (event: any) => {
 			console.error(event);
+
 			setIsRecording(false);
 		};
 		recognition.onend = () => {
 			console.log("recognition end");
 			setIsRecording(false);
-			handleSend();
+			// handleSend(); // Should we send the message after recording?
 		};
 
 		recognition.start();
@@ -84,7 +83,7 @@ export default function ChatInput({
 					contentEditable={true}
 					translate="no"
 					onInput={(e) =>
-						setInputValue((e.target as HTMLElement).textContent || "")
+						setInputValue({ text: (e.target as HTMLElement).textContent || "", voice: false })
 					}
 					onKeyDown={(e) => {
 						if (e.key === "Enter" && !e.shiftKey) {
@@ -93,11 +92,13 @@ export default function ChatInput({
 						}
 					}}
 					ref={messageRef}
+					suppressContentEditableWarning={true}
 					className="flex items-center flex-1 p-2 h-auto min-h-10 max-h-40 overflow-y-auto whitespace-pre-wrap break-words border-none
 					focus-visible:ring-0 focus-visible:outline-none"
 					data-placeholder="Message DragonGPT"
 					id="input-yes"
 				>
+					{inputValue.voice ? inputValue.text : <></>}
 				</div>
 				<Button
 					onClick={handleMicClick}

@@ -134,3 +134,8 @@ a {
 	font-size: larger;
 	font-weight: bold;
 }
+
+.blue-gray-gradient {
+	background: linear-gradient(90deg, #44545F 23%, #86929A 48%, #3D5264 66%);
+	background-clip: text;
+}

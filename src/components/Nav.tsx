@@ -1,6 +1,7 @@
 "use client";
 
 import {
+	ChevronLeft,
 	Ellipsis,
 	Menu,
 	Plus,
@@ -24,6 +25,7 @@ import { useState } from "react";
 import Link from "next/link";
 import ClearAllChatsButton from "./ClearAllChatsButton";
 import NavComponents from "./NavComponents";
+import * as SheetPrimitive from "@radix-ui/react-dialog"
 
 export default function Nav({
 	conversations,
@@ -46,7 +48,7 @@ export default function Nav({
 		>
 			{open ? (
 				<div
-					className="hidden md:flex md:flex-col overflow-x-auto md:gap-2 p-6 h-full justify-between box-border w-[-webkit-fill-available] transition-all ease-in-out duration-200"
+					className="hidden md:flex md:flex-col overflow-x-hidden md:gap-2 p-6 h-full justify-between box-border w-[-webkit-fill-available] transition-all ease-in-out duration-200"
 					id="navbar"
 				>
 					<div className="flex justify-center items-center transition-all ease-in-out duration-200">
@@ -80,7 +82,7 @@ export default function Nav({
 					className="hidden md:flex md:flex-col p-6 h-full justify-between box-border w-[-webkit-fill-available] transition-all ease-in-out duration-200"
 					id="navbar"
 				>
-					<div className="flex flex-col justify-center items-center transition-all ease-in-out duration-200 gap-4">
+					<div className="flex flex-col justify-center items-center transition-all ease-in-out duration-200 gap-2">
 						<Button
 							variant="ghost"
 							className="hover:bg-gray-300/40"
@@ -89,8 +91,9 @@ export default function Nav({
 							<Menu />
 						</Button>
 						<NewChatButton state={"closed"} />
-						<Separator />
 					</div>
+
+					<Separator className="my-4"/>
 
 					<div className="flex flex-col flex-grow">
 						{/* <h2 className="scroll-m-20 pb-2 text-2xl font-bold tracking-wide first:mt-0">Recent</h2> */}
@@ -117,15 +120,21 @@ export default function Nav({
 						side="left"
 						className="w-[webkit-fill-available] sm:w-[540px]"
 					>
+
 						<div
-							className="flex flex-col p-6 h-full justify-between box-border w-[-webkit-fill-available] transition-all ease-in-out duration-200"
+							className="flex flex-col h-full justify-between box-border w-[-webkit-fill-available] transition-all ease-in-out duration-200"
 							id="navbar"
 						>
-							<div className="flex gap-2 justify-center items-center mb-4 transition-all ease-in-out duration-200">
-								<NewChatButton />
+							<div className="flex flex-row mb-8">
+							<SheetPrimitive.Close className="rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none data-[state=open]:bg-secondary">
+								<ChevronLeft className="h-8 w-8" />
+								<span className="sr-only">Close</span>
+							</SheetPrimitive.Close>
 							</div>
+								<NewChatButton />
 
-							<Separator className="my-6" />
+							<Separator className="my-4" />
+
 							<div className="flex flex-col flex-grow">
 								<h2 className="scroll-m-20 pb-2 text-2xl font-semibold first:mt-0">
 									Recent

@@ -79,7 +79,7 @@ export default function Nav({
 				</div>
 			) : (
 				<div
-					className="hidden md:flex md:flex-col p-6 h-full justify-between box-border w-[-webkit-fill-available] transition-all ease-in-out duration-200"
+					className="hidden md:flex md:flex-col overflow-auto p-6 h-full justify-between box-border w-[-webkit-fill-available] transition-all ease-in-out duration-200"
 					id="navbar"
 				>
 					<div className="flex flex-col justify-center items-center transition-all ease-in-out duration-200 gap-2">

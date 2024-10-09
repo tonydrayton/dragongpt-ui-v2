@@ -3,6 +3,7 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Mic, Send } from "lucide-react";
 import { Textarea } from "./ui/textarea";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "./ui/alert-dialog";
 
 export default function ChatInput({
 	onSendMessage,
@@ -11,15 +12,13 @@ export default function ChatInput({
 	onSendMessage: (message: string) => void;
 	messageRef: React.RefObject<HTMLDivElement>;
 }) {
-	const [inputValue, setInputValue] = useState<{text: string, voice: boolean}>({text: "", voice: false});
+	const [inputValue, setInputValue] = useState<{ text: string, voice: boolean }>({ text: "", voice: false });
 	const [isSending, setIsSending] = useState(false);
 	const [isRecording, setIsRecording] = useState(false);
+	const [alertOpen, setAlertOpen] = useState(false);
 
 	const handleSend = () => {
-		console.log("a");
-		console.log({ inputValue });
 		if (inputValue.text.trim().length > 0) {
-			console.log(inputValue);
 			setIsSending(true);
 			onSendMessage(inputValue.text);
 			setInputValue({ text: "", voice: false });
@@ -29,6 +28,18 @@ export default function ChatInput({
 			setTimeout(() => setIsSending(false), 500);
 		}
 	};
+
+	// Remove the <br> tag when the content is empty (user deletes their text)
+	// This makes the placeholder reappear
+	useEffect(() => {
+		const input = messageRef.current;
+		if (input) {
+			const textContent = input.textContent?.trim();
+			if (textContent === '') {
+				input.innerHTML = '';
+			}
+		}
+	}, [messageRef.current?.textContent]);
 
 	// useEffect(() => {
 	// 	if (textAreaRef.current) {
@@ -51,39 +62,57 @@ export default function ChatInput({
 			(window as any).webkitSpeechRecognition;
 		const recognition = new SpeechRecognition();
 		recognition.lang = "en-US";
-		recognition.interimResults = true;
+		recognition.interimResults = false;
 
 		recognition.onstart = () => {
 			setIsRecording(true);
-			console.log("recognition start");
 		};
-		recognition.onresult = (event: any) => {
+		recognition.onresult = async (event: any) => {
 			const results = event.results as SpeechRecognitionResultList;
 			const transcript = results[0][0].transcript;
 			setInputValue({ text: transcript, voice: true });
+
+			// This was for when interimResults = true - it attempts to fix the cursor position (don't delete)
+			// setTimeout(() => {
+			// 	messageRef?.current?.focus();
+			// 	document.execCommand('SelectAll', false, undefined);
+			// 	document.getSelection()?.collapseToEnd();
+			// }, 500);
+
 		};
 		recognition.onerror = (event: any) => {
 			console.error(event);
-
+			setAlertOpen(true);
 			setIsRecording(false);
 		};
 		recognition.onend = () => {
 			console.log("recognition end");
+			messageRef?.current?.focus(); // Focus the div
+			document.execCommand('SelectAll', false, undefined);
+			document.getSelection()?.collapseToEnd();
 			setIsRecording(false);
 			// handleSend(); // Should we send the message after recording?
 		};
 
-		recognition.start();
+		if (isRecording) {
+			recognition.stop();
+			setIsRecording(false);
+			return;
+		} else {
+			recognition.start();
+			messageRef?.current?.focus(); // Focus the div
+		}
 	};
 
 	return (
-		<div className="items-center justify-center flex flex-row gap-2 w-[-webkit-fill-available]">
+		<div className="z-10 *:items-center justify-center flex flex-row gap-2 w-[-webkit-fill-available]">
 			<div className="flex flex-row w-[-webkit-fill-available] max-w-xl border-solid border rounded-xl shadow-spread dark:shadow-none focus-within:ring-1 focus-within:ring-black">
 				<div
 					contentEditable={true}
 					translate="no"
-					onInput={(e) =>
+					onInput={(e) => {
 						setInputValue({ text: (e.target as HTMLElement).textContent || "", voice: false })
+					}
 					}
 					onKeyDown={(e) => {
 						if (e.key === "Enter" && !e.shiftKey) {
@@ -102,7 +131,7 @@ export default function ChatInput({
 				</div>
 				<Button
 					onClick={handleMicClick}
-					className={`rounded-full ${isRecording ? "bg-red-500 animate-pulse" : ""
+					className={`rounded-full ${isRecording ? "bg-red-500 animate-pulse hover:bg-red-500" : ""
 						}`}
 					variant="ghost"
 				>
@@ -118,6 +147,21 @@ export default function ChatInput({
 				<Send className="md:hidden" />
 				<span className="hidden md:block">Send</span>
 			</Button>
+			<AlertDialog open={alertOpen}>
+				<AlertDialogTrigger></AlertDialogTrigger>
+				<AlertDialogContent>
+					<AlertDialogHeader>
+						<AlertDialogTitle>Error</AlertDialogTitle>
+						<AlertDialogDescription>
+							Permissions with your browser are preventing the microphone from working. Please check your settings.
+						</AlertDialogDescription>
+					</AlertDialogHeader>
+					<AlertDialogFooter>
+						<AlertDialogCancel onClick={() => setAlertOpen(!alertOpen)}>Done</AlertDialogCancel>
+					</AlertDialogFooter>
+				</AlertDialogContent>
+			</AlertDialog>
 		</div>
 	);
 }
+

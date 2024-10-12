@@ -27,9 +27,9 @@ const samples = {
 	know: [
 		'Clubs to join',
 		'Dining Plans',
+		'Courses',
 		'Tutor help',
 		'Book a study room',
-		'Campus map'
 	]
 };
 
@@ -195,13 +195,13 @@ export default function ChatInterface({
 						</div>
 					</div>
 					<div className="md:hidden flex flex-col items-center justify-center h-full w-full">
-						<h1 className="text-4xl font-bold mb-10 text-center w-56 flex-1">What would you like to know more about?</h1>
+						<h1 className="text-4xl font-bold mb-10 text-center w-56 flex-1 mt-60">What would you like to know more about?</h1>
 						<div className="flex flex-row items-start gap-10">
 							<div className="flex flex-col items-center">
-								<div className="grid grid-cols-4 gap-4">
+								<div className="flex flex-row flex-wrap gap-4 mb-2">
 									{samples.know.map((message, index) => (
 										// Put the message in the input field when clicked
-										<Button key={index} variant="ghost" onClick={() => handleSendMessage(message)} className="max-w-80 h-fit  text-base font-light rounded-full bg-gray-100 dark:bg-gray-100/40 hover:bg-gray-200 dark:hover:bg-gray-300/40 text-left px-2">
+										<Button key={index} variant="ghost" onClick={() => handleSendMessage(message)} className="p-1 px-2 max-w-80 h-fit  text-base font-light rounded-full bg-gray-100 dark:bg-gray-100/40 hover:bg-gray-200 dark:hover:bg-gray-300/40 text-left">
 											{message}
 										</Button>
 									))}

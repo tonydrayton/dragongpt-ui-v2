@@ -23,6 +23,13 @@ const samples = {
 		'May occasionally get incorrect information.',
 		'May occasionally produce harmful instructions or biased content.',
 		'Limited knowledge, Drexel community based.'
+	],
+	know: [
+		'Clubs to join',
+		'Dining Plans',
+		'Tutor help',
+		'Book a study room',
+		'Campus map'
 	]
 };
 
@@ -147,61 +154,62 @@ export default function ChatInterface({
 	return (
 		<div className="flex flex-col h-[calc(100vh-10rem)] w-full items-center">
 			{messages && messages.length > 0 && (
-				<div className="xl:px-32 flex-grow overflow-auto w-full">
+				<div
+				className="xl:px-32 flex-grow overflow-auto w-full"
+>
 					<ChatMessages messages={messages} isStreaming={isStreaming} />
 				</div>
 			)}
 			{messages && messages.length === 0 && (
 				<>
-				<div className="hidden md:flex flex-col items-center justify-center h-full w-full">
-					<h1 className="text-3xl font-bold mb-10">Ask DragonGPT</h1>
-					<div className="flex flex-row items-start gap-10">
-						<div className="flex flex-col items-center">
-							<h2 className="hidden lg:block text-lg font-bold mb-4">Ask Questions</h2>
-							<div className="flex flex-col gap-4">
-								{samples.questions.map((message, index) => (
-									// Put the message in the input field when clicked
-									<Button key={index} variant="ghost" onClick={() => handleSendMessage(message)} className="max-w-80 h-fit text-wrap text-base font-light rounded-lg bg-gray-100 dark:bg-gray-100/40 hover:bg-gray-200 dark:hover:bg-gray-300/40 text-left px-2">
-										{message}
-									</Button>
-								))}
+					<div className="hidden md:flex flex-col items-center justify-center h-full w-full">
+						<h1 className="text-3xl font-bold mb-10">Ask DragonGPT</h1>
+						<div className="flex flex-row items-start gap-10">
+							<div className="flex flex-col items-center">
+								<h2 className="hidden lg:block text-lg font-bold mb-4">Ask Questions</h2>
+								<div className="flex flex-col gap-4">
+									{samples.questions.map((message, index) => (
+										// Put the message in the input field when clicked
+										<Button key={index} variant="ghost" onClick={() => handleSendMessage(message)} className="max-w-80 h-fit text-wrap text-base font-light rounded-lg bg-gray-100 dark:bg-gray-100/40 hover:bg-gray-200 dark:hover:bg-gray-300/40 text-left px-2">
+											{message}
+										</Button>
+									))}
+								</div>
 							</div>
-						</div>
-						<div className="hidden lg:flex flex-col items-center">
-							<h2 className="text-lg font-bold mb-4">What can DragonGPT do?</h2>
-							<div className="flex flex-col gap-4">
-								{samples.capabilities.map((str, index) => (
-									<span className="max-w-80 h-fit text-wrap py-2 px-2 bg-gray-100 dark:bg-gray-100/40 rounded-lg" key={index}>{str}</span>
-								))}
+							<div className="hidden lg:flex flex-col items-center">
+								<h2 className="text-lg font-bold mb-4">What can DragonGPT do?</h2>
+								<div className="flex flex-col gap-4">
+									{samples.capabilities.map((str, index) => (
+										<span className="max-w-80 h-fit text-wrap py-2 px-2 bg-gray-100 dark:bg-gray-100/40 rounded-lg" key={index}>{str}</span>
+									))}
+								</div>
 							</div>
-						</div>
-						<div className="hidden lg:flex flex-col items-center">
-							<h2 className="text-lg font-bold mb-4">Limitations</h2>
-							<div className="flex flex-col gap-4">
-								{samples.limitations.map((str, index) => (
-									<span className="max-w-80 h-fit text-wrap py-2 px-2 bg-gray-100 dark:bg-gray-100/40 rounded-lg" key={index}>{str}</span>
-								))}
+							<div className="hidden lg:flex flex-col items-center">
+								<h2 className="text-lg font-bold mb-4">Limitations</h2>
+								<div className="flex flex-col gap-4">
+									{samples.limitations.map((str, index) => (
+										<span className="max-w-80 h-fit text-wrap py-2 px-2 bg-gray-100 dark:bg-gray-100/40 rounded-lg" key={index}>{str}</span>
+									))}
+								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-				<div className="md:hidden flex flex-col items-center justify-center h-full w-full">
-					<h1 className="text-4xl font-bold mb-10 text-center w-56 flex-1">What would you like to know more about?</h1>
-					<div className="flex flex-row items-start gap-10">
-						<div className="flex flex-col items-center">
-							<h2 className="hidden lg:block text-lg font-bold mb-4">Ask Questions</h2>
-							<div className="flex flex-col gap-4">
-								{samples.questions.map((message, index) => (
-									// Put the message in the input field when clicked
-									<Button key={index} variant="ghost" onClick={() => handleSendMessage(message)} className="max-w-80 h-fit text-wrap text-base font-light rounded-lg bg-gray-100 dark:bg-gray-100/40 hover:bg-gray-200 dark:hover:bg-gray-300/40 text-left px-2">
-										{message}
-									</Button>
-								))}
+					<div className="md:hidden flex flex-col items-center justify-center h-full w-full">
+						<h1 className="text-4xl font-bold mb-10 text-center w-56 flex-1">What would you like to know more about?</h1>
+						<div className="flex flex-row items-start gap-10">
+							<div className="flex flex-col items-center">
+								<div className="grid grid-cols-4 gap-4">
+									{samples.know.map((message, index) => (
+										// Put the message in the input field when clicked
+										<Button key={index} variant="ghost" onClick={() => handleSendMessage(message)} className="max-w-80 h-fit  text-base font-light rounded-full bg-gray-100 dark:bg-gray-100/40 hover:bg-gray-200 dark:hover:bg-gray-300/40 text-left px-2">
+											{message}
+										</Button>
+									))}
+								</div>
 							</div>
+
 						</div>
-						
 					</div>
-				</div>
 				</>
 			)}
 			{!messages && (

@@ -74,7 +74,7 @@ export default function ChatInterface({
 			);
 			window.localStorage.setItem('conversations', JSON.stringify(updatedConversations));
 		}
-		
+
 		setMessages(prev => [...prev!, { text: message, isUser: true }]);
 		setMessages(prev => [...prev!, { text: '', isUser: false }]);
 
@@ -152,7 +152,8 @@ export default function ChatInterface({
 				</div>
 			)}
 			{messages && messages.length === 0 && (
-				<div className="flex flex-col items-center justify-center h-full w-full">
+				<>
+				<div className="hidden md:flex flex-col items-center justify-center h-full w-full">
 					<h1 className="text-3xl font-bold mb-10">Ask DragonGPT</h1>
 					<div className="flex flex-row items-start gap-10">
 						<div className="flex flex-col items-center">
@@ -184,6 +185,24 @@ export default function ChatInterface({
 						</div>
 					</div>
 				</div>
+				<div className="md:hidden flex flex-col items-center justify-center h-full w-full">
+					<h1 className="text-4xl font-bold mb-10 text-center w-56 flex-1">What would you like to know more about?</h1>
+					<div className="flex flex-row items-start gap-10">
+						<div className="flex flex-col items-center">
+							<h2 className="hidden lg:block text-lg font-bold mb-4">Ask Questions</h2>
+							<div className="flex flex-col gap-4">
+								{samples.questions.map((message, index) => (
+									// Put the message in the input field when clicked
+									<Button key={index} variant="ghost" onClick={() => handleSendMessage(message)} className="max-w-80 h-fit text-wrap text-base font-light rounded-lg bg-gray-100 dark:bg-gray-100/40 hover:bg-gray-200 dark:hover:bg-gray-300/40 text-left px-2">
+										{message}
+									</Button>
+								))}
+							</div>
+						</div>
+						
+					</div>
+				</div>
+				</>
 			)}
 			{!messages && (
 				<div className="flex flex-grow justify-center">

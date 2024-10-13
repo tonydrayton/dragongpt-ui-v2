@@ -26,6 +26,9 @@ const geistMono = localFont({
 export const metadata: Metadata = {
   title: "DragonGPT",
   description: "Answer any Drexel question in seconds",
+  icons: {
+    icon: "favicon.ico",
+  },
 };
 
 export default function RootLayout({

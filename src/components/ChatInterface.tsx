@@ -111,7 +111,14 @@ export default function ChatInterface({
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ query: message }),
+        body: JSON.stringify({
+          priorConversation: activeConversation?.messages.map(
+            (messageObject) => {
+              return { text: messageObject.text, isUser: messageObject.isUser };
+            }
+          ),
+          query: message,
+        }),
       });
 
       if (!response.ok) {

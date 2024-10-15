@@ -38,7 +38,7 @@ export default function ChatMessages({
 		const chatMessages = document.getElementById("chat-messages");
 		if (!chatMessages) return;
 		const links = chatMessages.getElementsByTagName("a");
-		for (let link of Array.from(links)) {
+		for (const link of Array.from(links)) {
 			link.setAttribute("target", "_blank");
 		}
 	}, [messages]);

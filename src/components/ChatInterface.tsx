@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import ChatMessages from "./ChatMessages";
 import ChatInput from "./ChatInput";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { v4 } from "uuid";
 import { Button } from "./ui/button";
 import { Spinner } from "./ui/spinner";
@@ -128,23 +128,25 @@ export default function ChatInterface({
 				: [...pastConversations, convo]; // Append new conversation if it doesn't exist
 
 			window.localStorage.setItem('conversations', JSON.stringify(updatedConversations));
-		} catch (error: any) {
-			console.error('Error fetching bot response:', error.message);
-			const errorText = `I'm sorry, I couldn't process your request at this moment.\nPlease contact the developers with this error message: ${error.message} for question "${message}" `;
+		} catch (error: unknown) {
+			if(error instanceof Error) {
+				console.error('Error fetching bot response:', error.message);
+				const errorText = `I'm sorry, I couldn't process your request at this moment.\nPlease contact the developers with this error message: ${error.message} for question "${message}" `;
 
-			convo.messages.push({ text: errorText, isUser: false, timestamp: Date.now() });
-			const conversationExists = pastConversations.some(c => c.id === convo.id);
-			const updatedConversations = conversationExists
-				? pastConversations.map(c => (c.id === convo.id ? convo : c))  // Update existing
-				: [...pastConversations, convo]; // Append new conversation if it doesn't exist
+				convo.messages.push({ text: errorText, isUser: false, timestamp: Date.now() });
+				const conversationExists = pastConversations.some(c => c.id === convo.id);
+				const updatedConversations = conversationExists
+					? pastConversations.map(c => (c.id === convo.id ? convo : c))  // Update existing
+					: [...pastConversations, convo]; // Append new conversation if it doesn't exist
 
-			window.localStorage.setItem('conversations', JSON.stringify(updatedConversations));
+				window.localStorage.setItem('conversations', JSON.stringify(updatedConversations));
 
-			setMessages(prev => {
-				const newMessages = [...prev!];
-				newMessages[newMessages.length - 1].text = errorText;
-				return newMessages;
-			});
+				setMessages(prev => {
+					const newMessages = [...prev!];
+					newMessages[newMessages.length - 1].text = errorText;
+					return newMessages;
+				});
+			}
 		} finally {
 			setIsStreaming(false);
 

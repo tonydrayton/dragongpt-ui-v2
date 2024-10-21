@@ -103,7 +103,7 @@ export default function Nav({
 							</SheetTrigger>
 							<SheetContent
 								side="left"
-								className="w-[webkit-fill-available] sm:w-[540px] md:w-56"
+								className="w-[webkit-fill-available] sm:w-[540px] md:w-60"
 							>
 
 								<div

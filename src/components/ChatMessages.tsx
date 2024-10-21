@@ -48,7 +48,6 @@ export default function ChatMessages({
 		const scrollElement = scrollRef.current;
 		if (!scrollElement) return;
 		const { scrollTop, scrollHeight, clientHeight } = scrollElement;
-		console.log({ scrollTop, scrollHeight, clientHeight });
 
 		if (scrollTop === 0) { // at the top - fade only at the bottom
 			setMaskStyle(
@@ -112,7 +111,7 @@ export default function ChatMessages({
 							<span className="bg-gray-300/40 p-3 rounded-lg max-w-96 text-wrap whitespace-pre-wrap break-words" style={{ wordBreak: "break-word"}}>{message.text}</span>
 						) : (
 							<span
-								className="max-w-lg overflow-hiddend text-wrap whitespace-pre-wrap break-words tracking-tight"
+								className={`max-w-lg overflow-hidden text-wrap whitespace-pre-wrap break-words tracking-tight ${message.text.length === 0 && "after:content-[''] after:w-0.5 after:h-5 after:bg-black after:animate-blink after:ml-1 after:inline-block"}`}
 								style={{ wordBreak: "break-word" }}
 								id="bot-response"
 								// className="leading-8"
@@ -120,10 +119,6 @@ export default function ChatMessages({
 									__html: DOMPurify.sanitize(marked(message.text) as string),
 								}}
 							/>
-						)}
-						{/* Only show the loading animation if the message is being streamed */}
-						{isStreaming && index === messages.length - 1 && (
-							<span className="animate-pulse">...</span>
 						)}
 					</div>
 				</div>

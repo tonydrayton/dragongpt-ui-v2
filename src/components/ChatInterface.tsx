@@ -63,6 +63,7 @@ export default function ChatInterface({
 	}, [activeConversation]);
 
 	const handleSendMessage = async (message: string) => {
+		setIsStreaming(true);
 		let convo = activeConvo;
 		const pastConversations = JSON.parse(window.localStorage.getItem('conversations') || '[]') as Conversation[];
 		console.log({ pastConversations });
@@ -129,6 +130,8 @@ export default function ChatInterface({
 
 			window.localStorage.setItem('conversations', JSON.stringify(updatedConversations));
 		} catch (error: unknown) {
+						// wait 1 sec
+						await new Promise(resolve => setTimeout(resolve, 1000));
 			if(error instanceof Error) {
 				console.error('Error fetching bot response:', error.message);
 				const errorText = `I'm sorry, I couldn't process your request at this moment.\nPlease contact the developers with this error message: ${error.message} for question "${message}" `;

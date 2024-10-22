@@ -68,15 +68,11 @@ export default function Nav({
 					<NewChatButton />
 
 					<Separator className="my-4" />
-					<div className="flex flex-col flex-grow overflow-auto">
-						<h2 className="scroll-m-20 pb-2 text-2xl font-bold tracking-wide first:mt-0">
-							Recent
-						</h2>
+
 						<RecentConversations
 							conversations={conversations}
 							activeConversation={activeConversation}
 						/>
-					</div>
 					<Separator className="my-6" />
 					<div className="flex flex-col items-start gap-2">
 						<NavComponents variant="open" />
@@ -103,7 +99,7 @@ export default function Nav({
 							</SheetTrigger>
 							<SheetContent
 								side="left"
-								className="w-[webkit-fill-available] sm:w-[540px] md:w-60"
+								className="w-[webkit-fill-available] sm:w-[540px] md:w-60 transition-all"
 							>
 
 								<div
@@ -119,16 +115,10 @@ export default function Nav({
 									<NewChatButton />
 
 									<Separator className="my-4" />
-
-									<div className="flex flex-col flex-grow overflow-auto">
-										<h2 className="scroll-m-20 pb-2 text-2xl font-semibold first:mt-0">
-											Recent
-										</h2>
 										<RecentConversations
 											conversations={conversations}
 											activeConversation={activeConversation}
 										/>
-									</div>
 									<Separator className="my-6" />
 									<div className="flex flex-col items-start gap-4">
 										<NavComponents variant="mobile" />
@@ -141,14 +131,11 @@ export default function Nav({
 
 					<Separator className="my-4" />
 
-					<div className="flex flex-col flex-grow overflow-auto">
-						{/* <h2 className="scroll-m-20 pb-2 text-2xl font-bold tracking-wide first:mt-0">Recent</h2> */}
 						<RecentConversations
 							conversations={conversations}
 							activeConversation={activeConversation}
 							small
 						/>
-					</div>
 					<Separator className="my-6" />
 					<div className="flex flex-col items-start gap-2">
 						<NavComponents variant="closed" />
@@ -181,15 +168,10 @@ export default function Nav({
 
 							<Separator className="my-4" />
 
-							<div className="flex flex-col flex-grow overflow-auto">
-								<h2 className="scroll-m-20 pb-2 text-2xl font-semibold first:mt-0">
-									Recent
-								</h2>
 								<RecentConversations
 									conversations={conversations}
 									activeConversation={activeConversation}
 								/>
-							</div>
 							<Separator className="my-6" />
 							<div className="flex flex-col items-start gap-4">
 								<NavComponents variant="mobile" />

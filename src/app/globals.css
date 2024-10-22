@@ -91,12 +91,14 @@ body {
 	width: 6px;
 	transition-property: all;
 	transition-duration: 150ms;
-	/* Set the width of the scrollbar */
+}
+
+::-webkit-scrollbar-corner {
+	background-color: transparent;
 }
 
 ::-webkit-scrollbar-track {
 	background: #f1f1f100;
-	/* Set the background color of the track */
 }
 
 ::-webkit-scrollbar-thumb {

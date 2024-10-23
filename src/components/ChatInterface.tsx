@@ -200,6 +200,8 @@ export default function ChatInterface({
 
 	return (
 		<div className="flex flex-col h-[calc(100vh-10rem)] w-full items-center">
+			  <div className="hidden dark:block absolute top-64 m-auto w-72 h-72 lg:w-96 lg:h-96 bg-gradient-radial bg-gray-600/10 from-white/20 to-transparent rounded-full blur-3xl"></div>
+
 			{messages && messages.length > 0 && (
 				<div className="xl:px-20 flex-grow overflow-auto w-full">
 					<ChatMessages messages={messages} isStreaming={isStreaming} />

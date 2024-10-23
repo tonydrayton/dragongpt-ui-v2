@@ -112,7 +112,7 @@ export default function ChatInput({
 					}
 					}
 					onKeyDown={(e) => {
-						if (e.key === "Enter" && !e.shiftKey) {
+						if (e.key === "Enter" && !e.shiftKey && !isStreaming) {
 							e.preventDefault();
 							handleSend();
 						}

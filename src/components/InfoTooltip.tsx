@@ -10,7 +10,7 @@ const CustomTooltip = () => {
 					<HybridTooltipTrigger>
 						<Info />
 					</HybridTooltipTrigger>
-					<HybridTooltipContent className="max-w-80" side="bottom">
+					<HybridTooltipContent className="max-w-80 bg-black/70 border-none backdrop-filter backdrop-blur-sm text-white dark:bg-white dark:text-black" side="bottom">
 						Ask DragonGPT any of your Drexel related questions and get a response
 						in seconds
 					</HybridTooltipContent>

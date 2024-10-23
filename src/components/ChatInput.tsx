@@ -103,7 +103,7 @@ export default function ChatInput({
 	};
 
 	return (
-		<div className="z-10 *:items-center justify-center flex flex-row gap-2 w-[-webkit-fill-available]">
+		<div className="z-10 items-center justify-center flex flex-row gap-2 w-[-webkit-fill-available]">
 			<div className="flex flex-row w-[-webkit-fill-available] max-w-xl border-solid border rounded-xl shadow-spread dark:shadow-none focus-within:ring-1 focus-within:ring-black">
 				<div
 					contentEditable={true}

@@ -27,7 +27,9 @@ export default function DeleteChat({
 					<AlertDialogDescription className="mb-2">
 						This will permanently delete the message history of <span className="font-semibold">{convo.title}</span>
 					</AlertDialogDescription>
-					<Button variant="destructive" className="w-fit rounded-xl" onClick={() => onDelete(convo)}>Delete</Button>
+					<div>
+						<Button variant="destructive" className="rounded-xl" onClick={() => onDelete(convo)}>Delete</Button>
+					</div>
 				</AlertDialogHeader>
 			</AlertDialogContent>
 		</AlertDialog>

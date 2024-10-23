@@ -287,7 +287,7 @@ export default function ChatInterface({
 					<Spinner className="" />
 				</div>
 			)}
-			<ChatInput onSendMessage={handleSendMessage} messageRef={messageRef} />
+			<ChatInput onSendMessage={handleSendMessage} isStreaming={isStreaming} messageRef={messageRef} />
 		</div>
 	);
 }

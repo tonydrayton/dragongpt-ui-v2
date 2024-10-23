@@ -124,7 +124,7 @@ export default function ChatMessages({
               </span>
             ) : (
               <span
-				className={`max-w-lg overflow-hidden text-wrap whitespace-pre-wrap break-words tracking-tight ${isStreaming && message.text.length === 0 && "after:content-[''] after:w-1 after:h-5 after:bg-black after:animate-blink after:ml-1 after:inline-block"}`}
+				className={`max-w-lg overflow-hidden text-wrap whitespace-pre-wrap break-words tracking-tight ${isStreaming && message.text.length === 0 && "after:content-[''] after:w-0.5 after:h-5 after:bg-black dark:after:bg-white after:animate-blink after:ml-1 after:inline-block"}`}
                 style={{ wordBreak: "break-word" }}
                 id="bot-response"
                 // className="leading-8"

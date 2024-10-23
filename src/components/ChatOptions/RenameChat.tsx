@@ -1,6 +1,6 @@
 import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "../ui/alert-dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
-import { SquarePen, X } from "lucide-react";
+import { Pencil, X } from "lucide-react";
 import { Button } from "../ui/button";
 import { UseFormReturn } from "react-hook-form";
 import { Input } from "../ui/input";
@@ -17,8 +17,9 @@ export default function RenameChat({
 
 	return (
 		<AlertDialog>
-			<AlertDialogTrigger className="flex relative px-2 py-1.5 transition-all hover:bg-gray-200/50 text-sm items-center rounded-sm w-full">
-				<SquarePen className="mr-3" /> Rename
+			<AlertDialogTrigger className="flex gap-10 relative px-2 py-1.5 transition-all  hover:bg-sky-300/50 text-sm items-center rounded-sm w-full">
+				<p>Rename</p>
+				<Pencil className="w-5 h-5 ml-auto" />
 			</AlertDialogTrigger>
 			<AlertDialogContent>
 				<AlertDialogHeader>

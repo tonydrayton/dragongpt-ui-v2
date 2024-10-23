@@ -84,7 +84,7 @@ const RecentConversations = ({
 									)}
 								</Button>
 							</ContextMenuTrigger>
-							<ContextMenuContent className="pointer-events-auto">
+							<ContextMenuContent className="pointer-events-auto rounded-xl">
 								<ContextMenuItem asChild>
 									<RenameChat convo={convo} form={form} onSubmit={onSubmit} />
 								</ContextMenuItem>
@@ -102,7 +102,7 @@ const RecentConversations = ({
 										<span className="sr-only">Conversation options</span>
 									</Button>
 								</DropdownMenuTrigger>
-								<DropdownMenuContent align="end">
+								<DropdownMenuContent align="end" className="rounded-xl">
 									<DropdownMenuItem asChild>
 										<RenameChat convo={convo} form={form} onSubmit={onSubmit} />
 									</DropdownMenuItem>

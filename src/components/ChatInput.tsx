@@ -5,25 +5,24 @@ import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescript
 
 export default function ChatInput({
 	onSendMessage,
+	isStreaming,
 	messageRef,
 }: {
 	onSendMessage: (message: string) => void;
+	isStreaming: boolean;
 	messageRef: React.RefObject<HTMLDivElement>;
 }) {
 	const [inputValue, setInputValue] = useState<{ text: string, voice: boolean }>({ text: "", voice: false });
-	const [isSending, setIsSending] = useState(false);
 	const [isRecording, setIsRecording] = useState(false);
 	const [alertOpen, setAlertOpen] = useState(false);
 
 	const handleSend = () => {
 		if (inputValue.text.trim().length > 0) {
-			setIsSending(true);
 			onSendMessage(inputValue.text);
 			setInputValue({ text: "", voice: false });
 			if (messageRef.current) {
 				messageRef.current.innerText = "";
 			}
-			setTimeout(() => setIsSending(false), 500);
 		}
 	};
 
@@ -120,10 +119,11 @@ export default function ChatInput({
 					}}
 					ref={messageRef}
 					suppressContentEditableWarning={true}
-					className="flex items-center flex-1 p-2 h-auto min-h-10 max-h-40 overflow-y-auto whitespace-pre-wrap break-words border-none
+					className="flex items-center flex-1 p-2 h-auto min-h-10 max-h-40 overflow-y-auto whitespace-pre-wrap border-none
 					focus-visible:ring-0 focus-visible:outline-none"
 					data-placeholder="Message DragonGPT"
 					id="input-yes"
+					style={{ overflowWrap: "anywhere" }}
 				>
 					{inputValue.voice ? inputValue.text : <></>}
 				</div>
@@ -138,7 +138,7 @@ export default function ChatInput({
 			</div>
 			<Button
 				onClick={handleSend}
-				disabled={isSending}
+				disabled={isStreaming}
 				className={`rounded-xl px-3`}
 				variant="default"
 			>

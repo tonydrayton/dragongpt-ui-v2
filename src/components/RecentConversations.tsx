@@ -10,6 +10,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod"
 import RenameChat from "./ChatOptions/RenameChat";
 import DeleteChat from "./ChatOptions/DeleteChat";
+import { useConversationStore } from "@/stores/useConversationStore";
 
 const renameForm = z.object({
 	name: z.string()
@@ -19,14 +20,16 @@ const renameForm = z.object({
 });
 
 const RecentConversations = ({
-	conversations,
-	activeConversation,
 	small
 }: {
-	conversations: Conversation[],
-	activeConversation?: Conversation,
 	small?: boolean,
 }) => {
+	const {
+		conversations,
+		activeConversation,
+		setConversations
+	  } = useConversationStore();
+
 	const router = useRouter();
 	const form = useForm<z.infer<typeof renameForm>>({
 		resolver: zodResolver(renameForm),
@@ -39,7 +42,7 @@ const RecentConversations = ({
 		handleRename(convo, values.name);
 	}
 
-	const setActiveConversation = (convo: Conversation) => {
+	const goToChat = (convo: Conversation) => {
 		router.push(`/chat/${convo.id}`);
 	};
 
@@ -49,6 +52,7 @@ const RecentConversations = ({
 		if (conversation) {
 			conversation.title = newName;
 			window.localStorage.setItem('conversations', JSON.stringify(conversations));
+			setConversations(conversations);
 			window.location.reload();
 		}
 	}
@@ -57,6 +61,7 @@ const RecentConversations = ({
 		const conversations = JSON.parse(window.localStorage.getItem('conversations') || '[]') as Conversation[];
 		const newConversations = conversations.filter(c => c.id !== convo.id);
 		window.localStorage.setItem('conversations', JSON.stringify(newConversations));
+		setConversations(newConversations);
 		window.location.reload();
 	}
 
@@ -75,7 +80,7 @@ const RecentConversations = ({
 								<Button
 									key={convo.id}
 									className={`${!small ? 'min-w-32 px-1' : ''} flex flex-shrink-0 items-center text-left ${convo.id === activeConversation?.id ? 'dark:bg-gray-200/20 bg-gray-200/60' : ''} hover:bg-gray-300/40 my-2`}
-									onClick={() => setActiveConversation(convo)}
+									onClick={() => goToChat(convo)}
 									variant={"ghost"}
 								>
 									<MessageSquareText className={`${!small && 'mr-2'} w-4`} />

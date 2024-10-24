@@ -1,13 +1,21 @@
 import { Trash2Icon } from "lucide-react";
 import { Button } from "./ui/button";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "./ui/alert-dialog";
+import { useConversationStore } from "@/stores/useConversationStore";
 
 export default function ClearAllChatsButton({
 	iconOnly
 }: {
 	iconOnly?: boolean
 }) {
+	const {
+		setConversations,
+		setActiveConversation,
+	  } = useConversationStore();
+
 	const handleClearAllChats = () => {
+		setConversations([]);
+		setActiveConversation(undefined);
 		window.localStorage.removeItem('conversations');
 		window.location.reload();
 	}

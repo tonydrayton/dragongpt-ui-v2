@@ -18,13 +18,8 @@ import { useEffect, useState } from "react";
 import NavComponents from "./NavComponents";
 import * as SheetPrimitive from "@radix-ui/react-dialog"
 
-export default function Nav({
-	conversations,
-	activeConversation,
-}: {
-	conversations: Conversation[];
-	activeConversation?: Conversation;
-}) {
+export default function Nav() {
+
 	const [open, setOpen] = useState(true);
 
 	useEffect(() => {
@@ -70,8 +65,6 @@ export default function Nav({
 					<Separator className="my-4" />
 
 						<RecentConversations
-							conversations={conversations}
-							activeConversation={activeConversation}
 						/>
 					<Separator className="my-6" />
 					<div className="flex flex-col items-start gap-2">
@@ -116,8 +109,6 @@ export default function Nav({
 
 									<Separator className="my-4" />
 										<RecentConversations
-											conversations={conversations}
-											activeConversation={activeConversation}
 										/>
 									<Separator className="my-6" />
 									<div className="flex flex-col items-start gap-4">
@@ -132,8 +123,6 @@ export default function Nav({
 					<Separator className="my-4" />
 
 						<RecentConversations
-							conversations={conversations}
-							activeConversation={activeConversation}
 							small
 						/>
 					<Separator className="my-6" />
@@ -169,8 +158,6 @@ export default function Nav({
 							<Separator className="my-4" />
 
 								<RecentConversations
-									conversations={conversations}
-									activeConversation={activeConversation}
 								/>
 							<Separator className="my-6" />
 							<div className="flex flex-col items-start gap-4">

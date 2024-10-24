@@ -200,7 +200,6 @@ export default function ChatInterface({
 
 	return (
 		<div className="flex flex-col h-[calc(100vh-10rem)] w-full items-center">
-			  <div className="hidden dark:block absolute top-64 m-auto w-72 h-72 lg:w-96 lg:h-96 bg-gradient-radial bg-gray-600/10 from-white/20 to-transparent rounded-full blur-3xl"></div>
 
 			{messages && messages.length > 0 && (
 				<div className="xl:px-20 flex-grow overflow-auto w-full">
@@ -209,6 +208,7 @@ export default function ChatInterface({
 			)}
 			{messages && messages.length === 0 && (
 				<>
+					<div className="hidden dark:block absolute -z-10 top-72 m-auto w-72 h-72 lg:w-96 lg:h-96 bg-gradient-radial from-white/20 to-transparent rounded-full blur-2xl"></div>
 					<div className="hidden md:flex flex-col items-center justify-center h-full w-full">
 						<h1 className="text-3xl font-bold mb-10">Ask DragonGPT</h1>
 						<div className="flex flex-row items-start gap-10">
@@ -262,8 +262,8 @@ export default function ChatInterface({
 
 					</div>
 					<h1 className="md:hidden text-4xl font-bold mb-10 text-center w-56 flex-1 mt-60 blue-gray-gradient">
-							What would you like to know more about?
-						</h1>
+						What would you like to know more about?
+					</h1>
 					<div className="overflow-auto md:overflow-hidden md:hidden flex justify-end flex-col h-full w-full">
 						<div className="flex flex-col overflow-auto mb-2">
 							{samples.know.map((arr, index) => (

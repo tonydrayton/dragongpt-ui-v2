@@ -57,7 +57,7 @@ const RecentConversations = ({
 		const conversations = JSON.parse(window.localStorage.getItem('conversations') || '[]') as Conversation[];
 		const newConversations = conversations.filter(c => c.id !== convo.id);
 		window.localStorage.setItem('conversations', JSON.stringify(newConversations));
-		window.location.reload();
+		router.push('/');
 	}
 
 	return (
